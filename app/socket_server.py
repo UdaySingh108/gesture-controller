@@ -30,6 +30,10 @@ def handle_connect():
 @socketio.on('disconnect')
 def handle_disconnect():
     print("Client disconnected")
+@socketio.on('gesture')
+def handle_external_gesture(data):
+    print(f"📩 Received gesture from Python script: {data}")
+    socketio.emit('gesture', data, namespace='/')
 
 # ---- Gesture + Camera logic ----
 camera = cv2.VideoCapture(0)

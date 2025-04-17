@@ -2,7 +2,7 @@ import cv2
 import mediapipe as mp
 import socketio
 from gestures.landmark_helper import get_finger_positions
-from gestures.gesture_utils import detect_swipe_direction, is_pinch_gesture
+from gestures.gesture_utils import detect_swipe_direction, is_pinch_gesture, detect_static_gesture
 from flask_socketio import SocketIO
 import socketio
 
@@ -44,6 +44,18 @@ while True:
             if finger_positions:
                 index_x, index_y = finger_positions[1]
                 is_pinching = is_pinch_gesture(finger_positions)
+
+                gesture = detect_static_gesture(finger_positions)
+
+                if gesture == "fist":
+                    print("🤜 Fist detected -> Clear Cart")
+                    cv2.putText(img, "Clear Cart", (30, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
+                    sio.emit('gesture', {'type': 'clear_cart'})
+
+                elif gesture == "thumbs_up":
+                    print("👍 Thumbs Up detected -> Checkout")
+                    cv2.putText(img, "Checkout", (30, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 3)
+                    sio.emit('gesture', {'type': 'checkout'})
 
                 # Start dragging
                 if is_pinching and not is_dragging:
