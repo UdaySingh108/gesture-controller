@@ -29,7 +29,7 @@ def is_pinch_gesture(finger_positions, threshold=40):
 
 def detect_static_gesture(finger_positions):
     """
-    Detect static gestures like thumbs up and fist based on finger positions.
+    Detect static gestures like 'two fingers up' (index + middle) and 'fist'.
     """
     if len(finger_positions) < 5:
         return None
@@ -40,16 +40,25 @@ def detect_static_gesture(finger_positions):
     ring_tip = finger_positions[3]
     pinky_tip = finger_positions[4]
 
-    palm_y = finger_positions[0][1]  # Approximate palm level using thumb tip Y
+    # Use average Y of all fingertips as a reference palm line
+    palm_y = (thumb_tip[1] + index_tip[1] + middle_tip[1] + ring_tip[1] + pinky_tip[1]) / 5
 
-    # Fist: all fingers folded (tips below palm)
-    fingers_folded = all(tip[1] > palm_y for tip in [index_tip, middle_tip, ring_tip, pinky_tip])
-    if fingers_folded:
+    # Check if a finger is up (tip above palm level)
+    def is_up(tip_y): return tip_y < palm_y
+    def is_down(tip_y): return tip_y > palm_y
+
+    # Fist: all fingers folded (excluding thumb)
+    if all(is_down(tip[1]) for tip in [index_tip, middle_tip, ring_tip, pinky_tip]):
         return "fist"
 
-    # Thumbs up: thumb above others, others folded
-    thumb_up = thumb_tip[1] < index_tip[1] and all(tip[1] > palm_y for tip in [index_tip, middle_tip, ring_tip, pinky_tip])
-    if thumb_up:
-        return "thumbs_up"
+    # Two fingers up: index and middle up, others down
+    if (
+        is_up(index_tip[1]) and
+        is_up(middle_tip[1]) and
+        is_down(ring_tip[1]) and
+        is_down(pinky_tip[1]) and
+        is_down(thumb_tip[1])  # optional: remove for leniency
+    ):
+        return "twofingers_up"
 
     return None
