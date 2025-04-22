@@ -30,9 +30,11 @@ items = [
     {"id": 1, "name": "Chips", "x": 100, "y": 150, "radius": 30},
     {"id": 2, "name": "Cookies", "x": 200, "y": 150, "radius": 30},
     {"id": 3, "name": "Chocolate", "x": 300, "y": 150, "radius": 30},
-    {"id": 4, "name": "Nuts", "x": 100, "y": 250, "radius": 30},
-    {"id": 3, "name": "Soda", "x": 200, "y": 250, "radius": 30},
-    {"id": 3, "name": "Energy Drink", "x": 300, "y": 250, "radius": 30},
+    {"id": 4, "name": "Nuts", "x": 400, "y": 150, "radius": 30},
+    {"id": 5, "name": "Soda", "x": 100, "y": 250, "radius": 30},
+    {"id": 6, "name": "Energy D", "x": 200, "y": 250, "radius": 30},
+    {"id": 7, "name": "Water", "x": 300, "y": 250, "radius": 30},
+    {"id": 8, "name": "Cold Drink", "x": 400, "y": 250, "radius": 30},
 ]
 
 def get_item_under_finger(x, y):
